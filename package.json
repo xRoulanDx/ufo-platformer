@@ -1,0 +1,46 @@
+{
+	"name": "phaser-template",
+	"version": "1.0.0",
+	"description": "",
+	"scripts": {
+		"*** Build & Serve - DEV": "",
+		"build:dev": "webpack --mode development",
+		"serve:dev": "webpack-dev-server --mode development",
+		"*** Build & Serve - PROD": "",
+		"build:prod": "webpack --mode production",
+		"serve:prod": "webpack-dev-server --mode production",
+		"*** Linters": "",
+		"lint": "run-p lint:format lint:ts",
+		"lint:format": "prettier --list-different \"**/*.{ts,less,js,json,html}\"",
+		"lint:ts": "tslint --project tsconfig.json"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/xRoulanDx/phaser-template.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/xRoulanDx/phaser-template/issues"
+	},
+	"homepage": "https://github.com/xRoulanDx/phaser-template#readme",
+	"devDependencies": {
+		"@tinkoff/linters": "^0.3.0",
+		"copy-webpack-plugin": "^4.6.0",
+		"husky": "^1.3.1",
+		"npm-run-all": "^4.1.5",
+		"phaser": "^3.16.1",
+		"prettier": "^1.16.4",
+		"ts-loader": "^5.3.3",
+		"tslint": "^5.12.1",
+		"typescript": "^3.3.1",
+		"webpack": "^4.29.2",
+		"webpack-cli": "^3.2.3",
+		"webpack-dev-server": "^3.1.14"
+	},
+	"husky": {
+		"hooks": {
+			"pre-push": "npm run lint"
+		}
+	}
+}

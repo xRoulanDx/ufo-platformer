@@ -1,0 +1,9 @@
+div.container {
+	text-align: center;
+}
+
+div#game {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
