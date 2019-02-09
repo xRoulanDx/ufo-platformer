@@ -1,3 +1,4 @@
+import 'phaser';
 import {GameScene} from './scenes/game-scene';
 
 const config: GameConfig = {
@@ -21,6 +22,8 @@ export class MyGame extends Phaser.Game {
 	}
 }
 
+let game: MyGame;
+
 window.addEventListener('load', () => {
-	const game = new MyGame(config);
+	game = new MyGame(config);
 });

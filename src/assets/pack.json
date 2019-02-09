@@ -1,0 +1,26 @@
+{
+	"preload": {
+		"files": [
+			{
+				"type": "image",
+				"key": "sky",
+				"url": "./src/test/assets/sprites/sky.png"
+			},
+			{
+				"type": "image",
+				"key": "ground",
+				"url": "./src/test/assets/sprites/platform.png"
+			},
+			{
+				"type": "image",
+				"key": "star",
+				"url": "./src/test/assets/sprites/star.png"
+			},
+			{
+				"type": "image",
+				"key": "bomb",
+				"url": "./src/test/assets/sprites/bomb.png"
+			}
+		]
+	}
+}
