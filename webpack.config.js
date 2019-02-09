@@ -22,6 +22,10 @@ module.exports = {
 	},
 	plugins: [
 		new CleanWebpackPlugin(['dist']),
-		new CopyWebpackPlugin(['index.html', 'src/styles.css', {from: 'assets', to: 'assets'}])
+		new CopyWebpackPlugin([
+			'index.html',
+			'src/styles.css',
+			{from: 'assets', to: 'assets'}
+		])
 	]
 };
