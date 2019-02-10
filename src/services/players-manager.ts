@@ -28,7 +28,7 @@ export class PlayersManager {
 				handler.handle(data.actions);
 			}
 		});
-		// socketer.on(SocketEvent.CurrentPlayers, this.handleCurrentPlayers.bind(this));
+		socketer.on(SocketEvent.CurrentPlayers, this.handleCurrentPlayers.bind(this));
 		socketer.on(SocketEvent.PlayerDisconnect, this.handleDisconnectPlayer.bind(this));
 	}
 
@@ -59,8 +59,6 @@ export class PlayersManager {
 	}
 
 	private handleCurrentPlayers(currentPlayers: IPlayerCurrentPosition[]) {
-		console.log('CURRENT PLAYERS', currentPlayers);
-
 		currentPlayers.forEach(item => {
 			this.addNewPlayer(item.id, item.x, item.y);
 		});
