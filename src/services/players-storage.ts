@@ -1,17 +1,17 @@
-import {PlayerActionsHandler} from './player-actions-handler';
+import {PlayerEntity} from './player-entity';
 
 export class PlayerStorage {
-	private players: PlayerActionsHandler[] = [];
+	private players: PlayerEntity[] = [];
 
-	getAll(): PlayerActionsHandler[] {
+	getAll(): PlayerEntity[] {
 		return this.players;
 	}
 
-	add(player: PlayerActionsHandler) {
+	add(player: PlayerEntity) {
 		this.players.push(player);
 	}
 
-	getById(id: string): PlayerActionsHandler {
+	getById(id: string): PlayerEntity {
 		const findedPlayers = this.players.find(player => {
 			return player.id === id;
 		});

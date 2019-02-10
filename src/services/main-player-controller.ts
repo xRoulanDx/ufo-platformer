@@ -4,6 +4,7 @@ import {PlayerAction} from '../enums/palyer-action';
 import {IFrameAction} from '../dtos/frame-action';
 import {IPlayerFrameActions} from '../dtos/player-frame-actions';
 import {MoveType} from '../enums/move-type';
+import {IPlayerCurrentPosition} from '../dtos/playerCurrentPosition';
 
 export class MainPlayerController {
 	private isPlayerStay = false;
@@ -16,6 +17,14 @@ export class MainPlayerController {
 	) {}
 
 	update() {
+		const playerActionsSended = this.sendPlayerActions();
+
+		if (playerActionsSended) {
+			this.sendPlayerCurrentPosition();
+		}
+	}
+
+	private sendPlayerActions(): boolean {
 		const moveActions = this.getMoveActions();
 		const actions: IFrameAction[] = [...moveActions];
 		const payload: IPlayerFrameActions = {
@@ -25,7 +34,11 @@ export class MainPlayerController {
 
 		if (moveActions.length) {
 			this.socketer.emit(SocketEvent.PlayerActions, payload);
+
+			return true;
 		}
+
+		return false;
 	}
 
 	private getMoveActions(): IFrameAction[] {
@@ -60,5 +73,15 @@ export class MainPlayerController {
 		}
 
 		return frameActions;
+	}
+
+	private sendPlayerCurrentPosition() {
+		const payload: IPlayerCurrentPosition = {
+			id: this.id,
+			x: this.player.x,
+			y: this.player.y
+		};
+
+		this.socketer.emit(SocketEvent.PlayerCurrentPosition, payload);
 	}
 }

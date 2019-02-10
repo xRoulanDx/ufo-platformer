@@ -2,7 +2,7 @@ import {IFrameAction} from '../dtos/frame-action';
 import {PlayerAction} from '../enums/palyer-action';
 import {MoveType} from '../enums/move-type';
 
-export class PlayerActionsHandler {
+export class PlayerEntity {
 	private queue: IFrameAction[][] = [];
 
 	constructor(public id: string, private playerSprite: Phaser.Physics.Arcade.Sprite) {}
@@ -17,6 +17,10 @@ export class PlayerActionsHandler {
 
 			actions.forEach(item => this.handleFrameAction(item));
 		}
+	}
+
+	removePlayer() {
+		this.playerSprite.disableBody(true, true);
 	}
 
 	private handleFrameAction(action: IFrameAction) {
@@ -45,9 +49,5 @@ export class PlayerActionsHandler {
 				this.playerSprite.anims.play('turn', true);
 				break;
 		}
-
-		// if (this.setCurrentPlace) {
-		//     this.setCurrentPlace(this.playerSprite.x, this.playerSprite.y);
-		// }
 	}
 }

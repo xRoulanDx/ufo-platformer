@@ -8,8 +8,8 @@ export class GameScene extends Phaser.Scene {
 	private platforms: Phaser.Physics.Arcade.StaticGroup;
 
 	// services
-	private socketer: SocketerBase = new SocketerLocal();
-	//   private socketer: SocketerBase = new Socketer();
+	// private socketer: SocketerBase = new SocketerLocal();
+	private socketer: SocketerBase = new Socketer();
 	private playerManager: PlayersManager;
 
 	constructor() {

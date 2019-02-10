@@ -1,9 +1,9 @@
 import * as io from 'socket.io-client';
-import {ISubscription} from './dto/subscription.dto';
+import {ISubscription} from './dtos/subscription.dto';
 import {SocketerBase} from './abstract/socketer-base';
 
 export class Socketer extends SocketerBase {
-	private ip = 'http://188.166.49.136:8080';
+	private ip = 'http://104.248.248.87:8080';
 	private socket: SocketIOClient.Socket;
 
 	constructor() {
@@ -13,7 +13,7 @@ export class Socketer extends SocketerBase {
 	}
 
 	on(event: string, handler: Function): ISubscription {
-		const internalHandler = this.buildEventHandler(handler);
+		const internalHandler = this.buildEventHandler(handler, event);
 		const subscription: ISubscription = {
 			event,
 			handler: internalHandler
@@ -29,13 +29,17 @@ export class Socketer extends SocketerBase {
 	}
 
 	emit(event: string, payload: any) {
+		console.log('EMIT:', event);
+
 		const stringifiedData = JSON.stringify(payload);
 
 		this.socket.emit(event, stringifiedData);
 	}
 
-	private buildEventHandler(handler: Function): Function {
+	private buildEventHandler(handler: Function, event: string): Function {
 		return (data: string) => {
+			console.log('EVENT:', event);
+
 			const parsedData = JSON.parse(data);
 
 			handler(parsedData);

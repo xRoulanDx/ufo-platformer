@@ -3,18 +3,9 @@ import {PlayerSpriteFactory, ISetPlayerCollision} from './player-sprite-factory'
 import {MainPlayerController} from './main-player-controller';
 import {SocketerBase} from './socketer/abstract/socketer-base';
 import {SocketEvent} from '../enums/socket-event';
-import {PlayerActionsHandler} from './player-actions-handler';
+import {PlayerEntity} from './player-entity';
 import {IPlayerFrameActions} from '../dtos/player-frame-actions';
-
-interface ICurrentPlace {
-	id: string;
-	x: number;
-	y: number;
-}
-
-const CURRENT_PLACE_EVENT_TYPE = 'current place';
-const CURRENT_PLAYERS_EVENT_TYPE = 'current players';
-const DISCONNECT_PLAYER_EVENT_TYPE = 'disconnect player';
+import {IPlayerCurrentPosition} from '../dtos/playerCurrentPosition';
 
 export class PlayersManager {
 	private playersStorage = new PlayerStorage();
@@ -37,8 +28,8 @@ export class PlayersManager {
 				handler.handle(data.actions);
 			}
 		});
-		// socketer.on(CURRENT_PLAYERS_EVENT_TYPE, this.handleCurrentPlayers.bind(this));
-		// socketer.on(DISCONNECT_PLAYER_EVENT_TYPE, this.handleDisconnectPlayer.bind(this));
+		// socketer.on(SocketEvent.CurrentPlayers, this.handleCurrentPlayers.bind(this));
+		socketer.on(SocketEvent.PlayerDisconnect, this.handleDisconnectPlayer.bind(this));
 	}
 
 	createMainPlayer(id: string) {
@@ -55,13 +46,7 @@ export class PlayersManager {
 	}
 
 	private handleNewPlayer(id: string) {
-		const playerSprite = this.playerSpriteFactory.create();
-
-		this.setPlayerCollision(playerSprite);
-
-		const playerActionsHandler = new PlayerActionsHandler(id, playerSprite);
-
-		this.playersStorage.add(playerActionsHandler);
+		const playerSprite = this.addNewPlayer(id);
 
 		if (this.mainPlayerId === id) {
 			this.mainPlayerController = new MainPlayerController(
@@ -73,21 +58,34 @@ export class PlayersManager {
 		}
 	}
 
-	// private handleMove(movePayload: IMovePayload) {
-	//     var ufoPlayer = this.playersStorage.getById(movePayload.id);
+	private handleCurrentPlayers(currentPlayers: IPlayerCurrentPosition[]) {
+		console.log('CURRENT PLAYERS', currentPlayers);
 
-	//     ufoPlayer.move(movePayload.type);
-	// }
+		currentPlayers.forEach(item => {
+			this.addNewPlayer(item.id, item.x, item.y);
+		});
+	}
 
-	// private handleCurrentPlayers(currentPlayers: ICurrentPlace[]) {
-	//     currentPlayers.forEach(item => {
-	//         this.playerFactory.create(item.id, item.x, item.y);
-	//     })
-	// }
+	private addNewPlayer(
+		id: string,
+		x?: number,
+		y?: number
+	): Phaser.Physics.Arcade.Sprite {
+		const playerSprite = this.playerSpriteFactory.create(x, y);
 
-	// private handleDisconnectPlayer(id: string) {
-	//     var player = this.playersStorage.getById(id);
-	//     player.player.disableBody(true, true);
-	//     this.playersStorage.removeById(id);
-	// }
+		this.setPlayerCollision(playerSprite);
+
+		const playerActionsHandler = new PlayerEntity(id, playerSprite);
+
+		this.playersStorage.add(playerActionsHandler);
+
+		return playerSprite;
+	}
+
+	private handleDisconnectPlayer(id: string) {
+		const player = this.playersStorage.getById(id);
+
+		player.removePlayer();
+		this.playersStorage.removeById(id);
+	}
 }
