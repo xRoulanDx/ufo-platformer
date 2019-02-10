@@ -58,7 +58,6 @@ export class PlayersManager {
 	}
 
 	private handleCurrentPlayers(currentPlayers: IPlayerCurrentPosition[]) {
-		console.log('CURRENT PLAYERS', currentPlayers);
 		currentPlayers.forEach(item => {
 			this.addNewPlayer(item.id, item.x, item.y);
 		});
