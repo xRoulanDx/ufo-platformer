@@ -45,7 +45,7 @@ export class GameScene extends Phaser.Scene {
 		this.playerManager.createMainPlayer(id);
 	}
 
-	update(): void {
+	update(time: number, delta: number): void {
 		this.playerManager.update();
 	}
 }

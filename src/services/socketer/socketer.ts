@@ -13,6 +13,9 @@ export class Socketer extends SocketerBase {
 	}
 
 	on(event: string, handler: Function): ISubscription {
+		// tslint:disable-next-line:no-console
+		console.log('ON', event);
+
 		const subscription: ISubscription = {
 			event,
 			handler
@@ -28,6 +31,9 @@ export class Socketer extends SocketerBase {
 	}
 
 	emit(event: string, payload: any) {
+		// tslint:disable-next-line:no-console
+		console.log('EMIT', event, payload);
+
 		this.socket.emit(event, payload);
 	}
 }

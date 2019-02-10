@@ -21,13 +21,10 @@ export class PlayersManager {
 		this.playerSpriteFactory = new PlayerSpriteFactory(scene);
 
 		socketer.on(SocketEvent.NewPlayer, this.handleNewPlayer.bind(this));
-		socketer.on(SocketEvent.PlayerActions, (data: IPlayerFrameActions) => {
-			const handler = this.playersStorage.getById(data.id);
-
-			if (handler) {
-				handler.handle(data.actions);
-			}
-		});
+		socketer.on(
+			SocketEvent.PlayerCurrentPosition,
+			this.handleCurrentPosition.bind(this)
+		);
 		socketer.on(SocketEvent.CurrentPlayers, this.handleCurrentPlayers.bind(this));
 		socketer.on(SocketEvent.PlayerDisconnect, this.handleDisconnectPlayer.bind(this));
 	}
@@ -41,25 +38,27 @@ export class PlayersManager {
 		if (this.mainPlayerController) {
 			this.mainPlayerController.update();
 		}
-
-		this.playersStorage.getAll().forEach(item => item.update());
 	}
 
 	private handleNewPlayer(id: string) {
-		const playerSprite = this.addNewPlayer(id);
-
 		if (this.mainPlayerId === id) {
+			const sprite = this.playerSpriteFactory.create();
+
+			this.setPlayerCollision(sprite);
+
 			this.mainPlayerController = new MainPlayerController(
 				this.mainPlayerId,
-				this.scene,
-				playerSprite,
+				sprite,
 				this.scene.input.keyboard.createCursorKeys(),
 				this.socketer
 			);
+		} else {
+			this.addNewPlayer(id);
 		}
 	}
 
 	private handleCurrentPlayers(currentPlayers: IPlayerCurrentPosition[]) {
+		console.log('CURRENT PLAYERS', currentPlayers);
 		currentPlayers.forEach(item => {
 			this.addNewPlayer(item.id, item.x, item.y);
 		});
@@ -74,7 +73,7 @@ export class PlayersManager {
 
 		this.setPlayerCollision(playerSprite);
 
-		const playerActionsHandler = new PlayerEntity(id, playerSprite, this.scene);
+		const playerActionsHandler = new PlayerEntity(id, playerSprite);
 
 		this.playersStorage.add(playerActionsHandler);
 
@@ -86,5 +85,13 @@ export class PlayersManager {
 
 		player.removePlayer();
 		this.playersStorage.removeById(id);
+	}
+
+	private handleCurrentPosition(currentPosition: IPlayerCurrentPosition) {
+		const player = this.playersStorage.getById(currentPosition.id);
+
+		if (player) {
+			player.handleCurrentPosition(currentPosition);
+		}
 	}
 }
