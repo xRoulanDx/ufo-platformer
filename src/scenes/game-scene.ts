@@ -9,6 +9,7 @@ export class GameScene extends Phaser.Scene {
 
 	// services
 	// private socketer: SocketerBase = new SocketerLocal();
+
 	private socketer: SocketerBase = new Socketer();
 	private playerManager: PlayersManager;
 
