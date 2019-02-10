@@ -5,12 +5,17 @@ import {IFrameAction} from '../dtos/frame-action';
 import {IPlayerFrameActions} from '../dtos/player-frame-actions';
 import {MoveType} from '../enums/move-type';
 import {IPlayerCurrentPosition} from '../dtos/playerCurrentPosition';
+import {ShootDirection} from '../enums/shoot-direction';
 
 export class MainPlayerController {
 	private isPlayerStay = false;
+	private lastShoot = 0;
+	private lastShootDirection = ShootDirection.Left;
+	private shootDelay = 200;
 
 	constructor(
 		private id: string,
+		private scene: Phaser.Scene,
 		private player: Phaser.Physics.Arcade.Sprite,
 		private cursors: Phaser.Input.Keyboard.CursorKeys,
 		private socketer: SocketerBase
@@ -26,13 +31,14 @@ export class MainPlayerController {
 
 	private sendPlayerActions(): boolean {
 		const moveActions = this.getMoveActions();
-		const actions: IFrameAction[] = [...moveActions];
+		const shootActions = this.getShootActions();
+		const actions: IFrameAction[] = [...moveActions, ...shootActions];
 		const payload: IPlayerFrameActions = {
 			id: this.id,
 			actions
 		};
 
-		if (moveActions.length) {
+		if (actions.length) {
 			this.socketer.emit(SocketEvent.PlayerActions, payload);
 
 			return true;
@@ -73,6 +79,33 @@ export class MainPlayerController {
 		}
 
 		return frameActions;
+	}
+
+	private getShootActions(): IFrameAction[] {
+		this.updateLastShootDirection();
+
+		if (this.cursors.space.isDown && this.scene.time.now > this.lastShoot) {
+			this.lastShoot = this.scene.time.now + this.shootDelay;
+
+			return [
+				{
+					type: PlayerAction.Shoot,
+					payload: this.lastShootDirection
+				}
+			];
+		}
+
+		return [];
+	}
+
+	private updateLastShootDirection() {
+		if (this.cursors.left.isDown) {
+			this.lastShootDirection = ShootDirection.Left;
+		}
+
+		if (this.cursors.right.isDown) {
+			this.lastShootDirection = ShootDirection.Right;
+		}
 	}
 
 	private sendPlayerCurrentPosition() {

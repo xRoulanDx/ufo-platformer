@@ -13,13 +13,12 @@ export class Socketer extends SocketerBase {
 	}
 
 	on(event: string, handler: Function): ISubscription {
-		const internalHandler = this.buildEventHandler(handler, event);
 		const subscription: ISubscription = {
 			event,
-			handler: internalHandler
+			handler
 		};
 
-		this.socket.on(event, internalHandler);
+		this.socket.on(event, handler);
 
 		return subscription;
 	}
@@ -29,16 +28,6 @@ export class Socketer extends SocketerBase {
 	}
 
 	emit(event: string, payload: any) {
-		const stringifiedData = JSON.stringify(payload);
-
-		this.socket.emit(event, stringifiedData);
-	}
-
-	private buildEventHandler(handler: Function, event: string): Function {
-		return (data: string) => {
-			const parsedData = JSON.parse(data);
-
-			handler(parsedData);
-		};
+		this.socket.emit(event, payload);
 	}
 }

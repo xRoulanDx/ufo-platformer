@@ -51,6 +51,7 @@ export class PlayersManager {
 		if (this.mainPlayerId === id) {
 			this.mainPlayerController = new MainPlayerController(
 				this.mainPlayerId,
+				this.scene,
 				playerSprite,
 				this.scene.input.keyboard.createCursorKeys(),
 				this.socketer
@@ -73,7 +74,7 @@ export class PlayersManager {
 
 		this.setPlayerCollision(playerSprite);
 
-		const playerActionsHandler = new PlayerEntity(id, playerSprite);
+		const playerActionsHandler = new PlayerEntity(id, playerSprite, this.scene);
 
 		this.playersStorage.add(playerActionsHandler);
 

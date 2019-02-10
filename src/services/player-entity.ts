@@ -1,11 +1,24 @@
 import {IFrameAction} from '../dtos/frame-action';
 import {PlayerAction} from '../enums/palyer-action';
 import {MoveType} from '../enums/move-type';
+import {ShootDirection} from '../enums/shoot-direction';
+import {Bullet} from '../objects/bullet';
 
 export class PlayerEntity {
 	private queue: IFrameAction[][] = [];
+	private bullets: Phaser.GameObjects.Group;
 
-	constructor(public id: string, private playerSprite: Phaser.Physics.Arcade.Sprite) {}
+	constructor(
+		public id: string,
+		private playerSprite: Phaser.Physics.Arcade.Sprite,
+		private scene: Phaser.Scene
+	) {
+		this.bullets = this.scene.add.group({
+			classType: Bullet,
+			active: true,
+			runChildUpdate: true
+		});
+	}
 
 	handle(actions: IFrameAction[]) {
 		this.queue.push(actions);
@@ -28,6 +41,9 @@ export class PlayerEntity {
 			case PlayerAction.Move:
 				this.handleMoveAction(action.payload);
 				break;
+			case PlayerAction.Shoot:
+				this.handleShootAction(action.payload);
+				break;
 		}
 	}
 
@@ -49,5 +65,16 @@ export class PlayerEntity {
 				this.playerSprite.anims.play('turn', true);
 				break;
 		}
+	}
+
+	private handleShootAction(shootDirection: ShootDirection) {
+		this.bullets.add(
+			new Bullet({
+				scene: this.scene,
+				x: this.playerSprite.x,
+				y: this.playerSprite.y,
+				shootDirection
+			})
+		);
 	}
 }
