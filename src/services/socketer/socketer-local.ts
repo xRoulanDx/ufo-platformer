@@ -1,5 +1,5 @@
 import {SocketerBase} from './abstract/socketer-base';
-import {ISubscription} from './dto/subscription.dto';
+import {ISubscription} from './dtos/subscription.dto';
 
 export class SocketerLocal extends SocketerBase {
 	private subscriptions: ISubscription[] = [];

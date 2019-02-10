@@ -1,4 +1,4 @@
-import {ISubscription} from '../dto/subscription.dto';
+import {ISubscription} from '../dtos/subscription.dto';
 
 export abstract class SocketerBase {
 	abstract on(event: string, handler: Function): ISubscription;
