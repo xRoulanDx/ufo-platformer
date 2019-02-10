@@ -29,8 +29,6 @@ export class Socketer extends SocketerBase {
 	}
 
 	emit(event: string, payload: any) {
-		console.log('EMIT:', event);
-
 		const stringifiedData = JSON.stringify(payload);
 
 		this.socket.emit(event, stringifiedData);
@@ -38,8 +36,6 @@ export class Socketer extends SocketerBase {
 
 	private buildEventHandler(handler: Function, event: string): Function {
 		return (data: string) => {
-			console.log('EVENT:', event);
-
 			const parsedData = JSON.parse(data);
 
 			handler(parsedData);
