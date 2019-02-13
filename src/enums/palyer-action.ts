@@ -1,4 +1,5 @@
 export enum PlayerAction {
 	Move = 'move',
-	Shoot = 'shoot'
+	Shoot = 'shoot',
+	Animation = 'animation'
 }

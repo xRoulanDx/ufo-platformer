@@ -12,7 +12,6 @@ export class PlayerSpriteFactory {
 	private initBasePlayer(x: number, y: number): Phaser.Physics.Arcade.Sprite {
 		const player = this.scene.physics.add.sprite(x, y, 'dude');
 
-		player.setBounce(0.2);
 		player.setCollideWorldBounds(true);
 
 		this.scene.anims.create({

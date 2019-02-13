@@ -27,6 +27,7 @@ export class PlayersManager {
 		);
 		socketer.on(SocketEvent.CurrentPlayers, this.handleCurrentPlayers.bind(this));
 		socketer.on(SocketEvent.PlayerDisconnect, this.handleDisconnectPlayer.bind(this));
+		socketer.on(SocketEvent.PlayerActions, this.handlePlayerActions.bind(this));
 	}
 
 	createMainPlayer(id: string) {
@@ -72,7 +73,7 @@ export class PlayersManager {
 
 		this.setPlayerCollision(playerSprite);
 
-		const playerActionsHandler = new PlayerEntity(id, playerSprite);
+		const playerActionsHandler = new PlayerEntity(id, this.scene, playerSprite);
 
 		this.playersStorage.add(playerActionsHandler);
 
@@ -91,6 +92,14 @@ export class PlayersManager {
 
 		if (player) {
 			player.handleCurrentPosition(currentPosition);
+		}
+	}
+
+	private handlePlayerActions(playerFrameActions: IPlayerFrameActions) {
+		const player = this.playersStorage.getById(playerFrameActions.id);
+
+		if (player) {
+			player.handlePlayerActions(playerFrameActions.actions);
 		}
 	}
 }
