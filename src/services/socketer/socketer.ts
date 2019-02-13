@@ -3,7 +3,7 @@ import {ISubscription} from './dtos/subscription.dto';
 import {SocketerBase} from './abstract/socketer-base';
 
 export class Socketer extends SocketerBase {
-	private ip = 'http://104.248.248.87:8080';
+	private ip = 'https://104.248.248.87:8443';
 	private socket: SocketIOClient.Socket;
 
 	constructor() {
